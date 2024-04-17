@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from "react"
 import styled from "styled-components"
 import wandIcon from "../images/magic-wand.svg"
 import Button from "../UI/Button"
+import { generateRandomNumber } from "../utils/generateRandomNumber"
 
 const firstColumnNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
@@ -67,6 +68,13 @@ const StyledButton = styled(Button)`
     margin: 23px auto 0;
 `
 
+const GenerateButton = styled.button`
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+`
+
 export const TicketView = React.memo(() => {
     const [firstField, setFirstField] = useState<number[]>([])
     const [secondField, setSecondField] = useState<number[]>([])
@@ -76,7 +84,20 @@ export const TicketView = React.memo(() => {
         return (firstField.length === 8 && secondField.length === 1)
     }, [firstField, secondField])
 
-    console.log(allSelected)
+
+    const generateRandomly = useCallback(() => {
+        const firstField: number[] = []
+        while(firstField.length < 8) {
+            const num = generateRandomNumber(1, 12)
+            if(!firstField.includes(num)) {
+                firstField.push(num)
+            }
+        }
+        setFirstField(firstField)
+        const secondField = [generateRandomNumber(1,2)]
+        setSecondField(secondField)
+    }, [])
+
 
     const handleSelectFirst = useCallback((number: number) => {
         if (!firstField.includes(number) && firstField.length < 8) {
@@ -96,21 +117,25 @@ export const TicketView = React.memo(() => {
 
 
     const handleSubmit = useCallback(() => {
-
+        
     }, [firstField, secondField])
 
 
+
     return <StyledWrapper>
+
         <StyledHeader>
             <StyledTitle>Билет 1</StyledTitle>
-            <img src={wandIcon} alt="Wand icon" />
+            <GenerateButton title="Выгбрать случайно" onClick={generateRandomly}><img src={wandIcon} alt="Wand icon" /></GenerateButton>
         </StyledHeader>
+
         <StyledSubtitle>
             Поле 1 <span>Отметьте 8 чисел.</span>
         </StyledSubtitle>
+
         <StyledBox>
             {firstColumnNumbers.map((n: number) => {
-                return <StyledNumber selected={firstField.includes(n)} onClick={() => handleSelectFirst(n)}>{n}</StyledNumber>
+                return <StyledNumber key={n} selected={firstField.includes(n)} onClick={() => handleSelectFirst(n)}>{n}</StyledNumber>
             })}
         </StyledBox>
 
@@ -123,6 +148,8 @@ export const TicketView = React.memo(() => {
             <StyledNumber selected={secondField.includes(1)} onClick={() => handleSelectSecond(1)}>1</StyledNumber>
             <StyledNumber selected={secondField.includes(2)} onClick={() => handleSelectSecond(2)}>2</StyledNumber>
         </StyledBox>
+
         <StyledButton disabled={!allSelected}>Показать результат</StyledButton>
+
     </StyledWrapper>
 })
