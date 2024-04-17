@@ -2,15 +2,29 @@ import React, { useCallback, useMemo, useState } from "react"
 import styled from "styled-components"
 import wandIcon from "../images/magic-wand.svg"
 import Button from "../UI/Button"
-import { generateRandomNumber } from "../utils/generateRandomNumber"
+import { generateRandomCombination } from "../utils/generateRandomCombination"
+import { checkWinningCombination } from "../utils/checkWinningCombination"
+import { FIRST_FIELD_NUMBERS } from "../constants"
 
-const firstColumnNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
 
 const StyledWrapper = styled.div`
     padding: 14px 11px 24px;
     background: #fff;
     border-radius: 3px;
     width: fit-content;
+    min-height: 368px;
+    width: 302px;
+    @media screen and (max-width: 320px) {
+        width: 100%;
+    }
+`
+
+
+const StyledMessage = styled.p`
+    font-weight: 300;
+    font-size: 14px;
+    margin-top: 10px;
 `
 
 
@@ -35,7 +49,6 @@ const StyledSubtitle = styled.p`
 `
 
 const StyledBox = styled.div`
-    max-width: 274px;
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 16px;
@@ -78,6 +91,7 @@ const GenerateButton = styled.button`
 export const TicketView = React.memo(() => {
     const [firstField, setFirstField] = useState<number[]>([])
     const [secondField, setSecondField] = useState<number[]>([])
+    const [message, setMessage] = useState<string | null>(null)
 
 
     const allSelected = useMemo(() => {
@@ -86,16 +100,9 @@ export const TicketView = React.memo(() => {
 
 
     const generateRandomly = useCallback(() => {
-        const firstField: number[] = []
-        while(firstField.length < 8) {
-            const num = generateRandomNumber(1, 12)
-            if(!firstField.includes(num)) {
-                firstField.push(num)
-            }
-        }
-        setFirstField(firstField)
-        const secondField = [generateRandomNumber(1,2)]
-        setSecondField(secondField)
+        const combination = generateRandomCombination()
+        setFirstField(combination.firstField)
+        setSecondField(combination.secondField)
     }, [])
 
 
@@ -108,7 +115,7 @@ export const TicketView = React.memo(() => {
     }, [firstField])
 
     const handleSelectSecond = useCallback((number: number) => {
-        if(secondField.includes(number)) {
+        if (secondField.includes(number)) {
             setSecondField(p => p.filter(n => n !== number))
             return
         }
@@ -117,16 +124,28 @@ export const TicketView = React.memo(() => {
 
 
     const handleSubmit = useCallback(() => {
-        
+        const userCombination = { firstField, secondField }
+        const winningCombination = generateRandomCombination()
+        const won = checkWinningCombination(userCombination, winningCombination)
+        if (won) setMessage("Ого, вы выиграли! Поздравляем!")
+        if (!won) setMessage("К сожалению, вы не выиграли.")
     }, [firstField, secondField])
 
+
+
+    if (message) {
+        return <StyledWrapper>
+            <StyledTitle>Билет 1</StyledTitle>
+            <StyledMessage>{message}</StyledMessage>
+        </StyledWrapper>
+    }
 
 
     return <StyledWrapper>
 
         <StyledHeader>
             <StyledTitle>Билет 1</StyledTitle>
-            <GenerateButton title="Выгбрать случайно" onClick={generateRandomly}><img src={wandIcon} alt="Wand icon" /></GenerateButton>
+            <GenerateButton title="Выгбрать автоматически" onClick={generateRandomly}><img src={wandIcon} alt="Wand icon" /></GenerateButton>
         </StyledHeader>
 
         <StyledSubtitle>
@@ -134,7 +153,7 @@ export const TicketView = React.memo(() => {
         </StyledSubtitle>
 
         <StyledBox>
-            {firstColumnNumbers.map((n: number) => {
+            {FIRST_FIELD_NUMBERS.map((n: number) => {
                 return <StyledNumber key={n} selected={firstField.includes(n)} onClick={() => handleSelectFirst(n)}>{n}</StyledNumber>
             })}
         </StyledBox>
@@ -149,7 +168,7 @@ export const TicketView = React.memo(() => {
             <StyledNumber selected={secondField.includes(2)} onClick={() => handleSelectSecond(2)}>2</StyledNumber>
         </StyledBox>
 
-        <StyledButton disabled={!allSelected}>Показать результат</StyledButton>
+        <StyledButton onClick={handleSubmit} disabled={!allSelected}>Показать результат</StyledButton>
 
     </StyledWrapper>
 })
