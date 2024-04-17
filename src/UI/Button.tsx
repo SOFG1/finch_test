@@ -11,6 +11,9 @@ const StyledButton = styled.button`
     border-radius: 40px;
     cursor: pointer;
     transition: 200ms;
+    &:disabled {
+        cursor: not-allowed;
+    }
     &:hover {
         background-color: #dddddd;
     }

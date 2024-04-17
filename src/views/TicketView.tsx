@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useMemo, useState } from "react"
 import styled from "styled-components"
 import wandIcon from "../images/magic-wand.svg"
 import Button from "../UI/Button"
@@ -68,11 +68,15 @@ const StyledButton = styled(Button)`
 `
 
 export const TicketView = React.memo(() => {
-
     const [firstField, setFirstField] = useState<number[]>([])
     const [secondField, setSecondField] = useState<number[]>([])
 
 
+    const allSelected = useMemo(() => {
+        return (firstField.length === 8 && secondField.length === 1)
+    }, [firstField, secondField])
+
+    console.log(allSelected)
 
     const handleSelectFirst = useCallback((number: number) => {
         if (!firstField.includes(number) && firstField.length < 8) {
@@ -89,6 +93,11 @@ export const TicketView = React.memo(() => {
         }
         setSecondField([number])
     }, [secondField])
+
+
+    const handleSubmit = useCallback(() => {
+
+    }, [firstField, secondField])
 
 
     return <StyledWrapper>
@@ -114,6 +123,6 @@ export const TicketView = React.memo(() => {
             <StyledNumber selected={secondField.includes(1)} onClick={() => handleSelectSecond(1)}>1</StyledNumber>
             <StyledNumber selected={secondField.includes(2)} onClick={() => handleSelectSecond(2)}>2</StyledNumber>
         </StyledBox>
-        <StyledButton>Показать результат</StyledButton>
+        <StyledButton disabled={!allSelected}>Показать результат</StyledButton>
     </StyledWrapper>
 })
