@@ -5,6 +5,9 @@ import Button from "../UI/Button"
 import { generateRandomCombination } from "../utils/generateRandomCombination"
 import { checkWinningCombination } from "../utils/checkWinningCombination"
 import { FIRST_FIELD_NUMBERS } from "../constants"
+import { CombinationType } from "../types"
+import { postLotteryResult } from "../api"
+import { delay } from "../utils/delay"
 
 
 
@@ -123,12 +126,25 @@ export const TicketView = React.memo(() => {
     }, [secondField])
 
 
+    const sendDataToAPI = useCallback(async (comb: CombinationType, isTicketWon: boolean) => {
+        const isSuccess = await postLotteryResult({ ...comb, isTicketWon })
+        if(isSuccess) return
+        await delay(2000)
+        const secondAttemptSuccess = await postLotteryResult({ ...comb, isTicketWon })
+        if(secondAttemptSuccess) return
+        await delay(2000)
+        const thirdAttemptSuccess = await postLotteryResult({ ...comb, isTicketWon })
+        if(thirdAttemptSuccess) return
+        alert("Ошибка при отправке данных на сервер")
+    }, [])
+
     const handleSubmit = useCallback(() => {
         const userCombination = { firstField, secondField }
         const winningCombination = generateRandomCombination()
         const won = checkWinningCombination(userCombination, winningCombination)
         if (won) setMessage("Ого, вы выиграли! Поздравляем!")
         if (!won) setMessage("К сожалению, вы не выиграли.")
+        sendDataToAPI(userCombination, won)
     }, [firstField, secondField])
 
 
