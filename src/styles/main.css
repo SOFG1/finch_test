@@ -1,0 +1,11 @@
+@import "reset-css";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap');
+
+body {
+  background: linear-gradient(to bottom, #4568dc, #b06ab3);
+  min-height: 100vh;
+  padding: 17px 12px;
+  font-size: 16px;
+  line-height: 22px;
+  font-family: "Roboto", sans-serif;
+}
