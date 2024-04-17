@@ -1,7 +1,9 @@
-import React from "react"
+import React, { useCallback, useState } from "react"
 import styled from "styled-components"
 import wandIcon from "../images/magic-wand.svg"
 import Button from "../UI/Button"
+
+const firstColumnNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 const StyledWrapper = styled.div`
     padding: 14px 11px 24px;
@@ -38,7 +40,7 @@ const StyledBox = styled.div`
     margin-bottom: 16px;
 `
 
-const StyledNumber = styled.button<{selected?: boolean}>`
+const StyledNumber = styled.button<{ selected?: boolean }>`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -54,7 +56,7 @@ const StyledNumber = styled.button<{selected?: boolean}>`
     &:hover {
         background-color: #dddddd;
     }
-    ${({selected}) => selected && `
+    ${({ selected }) => selected && `
         background-color: #FFD205;
         border: none;
         transform: scale(0.9);
@@ -66,6 +68,29 @@ const StyledButton = styled(Button)`
 `
 
 export const TicketView = React.memo(() => {
+
+    const [firstField, setFirstField] = useState<number[]>([])
+    const [secondField, setSecondField] = useState<number[]>([])
+
+
+
+    const handleSelectFirst = useCallback((number: number) => {
+        if (!firstField.includes(number) && firstField.length < 8) {
+            setFirstField(p => ([...p, number]))
+            return
+        }
+        setFirstField(p => p.filter(n => n !== number))
+    }, [firstField])
+
+    const handleSelectSecond = useCallback((number: number) => {
+        if(secondField.includes(number)) {
+            setSecondField(p => p.filter(n => n !== number))
+            return
+        }
+        setSecondField([number])
+    }, [secondField])
+
+
     return <StyledWrapper>
         <StyledHeader>
             <StyledTitle>Билет 1</StyledTitle>
@@ -75,18 +100,9 @@ export const TicketView = React.memo(() => {
             Поле 1 <span>Отметьте 8 чисел.</span>
         </StyledSubtitle>
         <StyledBox>
-            <StyledNumber>1</StyledNumber>
-            <StyledNumber>2</StyledNumber>
-            <StyledNumber>3</StyledNumber>
-            <StyledNumber>4</StyledNumber>
-            <StyledNumber selected={true}>5</StyledNumber>
-            <StyledNumber>6</StyledNumber>
-            <StyledNumber>7</StyledNumber>
-            <StyledNumber>8</StyledNumber>
-            <StyledNumber>9</StyledNumber>
-            <StyledNumber>10</StyledNumber>
-            <StyledNumber>11</StyledNumber>
-            <StyledNumber>12</StyledNumber>
+            {firstColumnNumbers.map((n: number) => {
+                return <StyledNumber selected={firstField.includes(n)} onClick={() => handleSelectFirst(n)}>{n}</StyledNumber>
+            })}
         </StyledBox>
 
 
@@ -95,8 +111,8 @@ export const TicketView = React.memo(() => {
         </StyledSubtitle>
 
         <StyledBox>
-            <StyledNumber>1</StyledNumber>
-            <StyledNumber>2</StyledNumber>
+            <StyledNumber selected={secondField.includes(1)} onClick={() => handleSelectSecond(1)}>1</StyledNumber>
+            <StyledNumber selected={secondField.includes(2)} onClick={() => handleSelectSecond(2)}>2</StyledNumber>
         </StyledBox>
         <StyledButton>Показать результат</StyledButton>
     </StyledWrapper>
