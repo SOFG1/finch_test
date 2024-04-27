@@ -38,7 +38,7 @@ const StyledButton = styled(Button)`
 export const TicketView = () => {
   const [firstField, setFirstField] = useState<number[]>([]);
   const [secondField, setSecondField] = useState<number[]>([]);
-  const [message, setMessage] = useState<string | null>(null);
+  const [won, setWon] = useState<undefined | boolean>()
 
   const allSelected =
     firstField.length === SELECTED_IN_FIRST_FIELD && secondField.length === 1;
@@ -73,16 +73,16 @@ export const TicketView = () => {
     const userCombination = { firstField, secondField };
     const winningCombination = generateRandomCombination();
     const won = checkWinningCombination(userCombination, winningCombination);
-    if (won) setMessage("Ого, вы выиграли! Поздравляем!");
-    if (!won) setMessage("К сожалению, вы не выиграли.");
+    setWon(won)
     sendDataToAPIRepeatedly(userCombination, won);
   };
 
-  if (message) {
+  if (won !== undefined) {
     return (
       <StyledWrapper>
         <p>Билет 1</p>
-        <StyledMessage>{message}</StyledMessage>
+        {won === true && <StyledMessage>Ого, вы выиграли! Поздравляем!</StyledMessage>}
+        {won === false && <StyledMessage>К сожалению, вы не выиграли.</StyledMessage>}
       </StyledWrapper>
     );
   }
