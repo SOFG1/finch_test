@@ -1,13 +1,19 @@
 import React, { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
-import wandIcon from "../images/magic-wand.svg";
 import Button from "../UI/Button";
 import { generateRandomCombination } from "../utils/generateRandomCombination";
 import { checkWinningCombination } from "../utils/checkWinningCombination";
-import { FIRST_FIELD_SIZE, SELECTED_IN_FIRST_FIELD } from "../constants";
+import {
+  FIRST_FIELD_SIZE,
+  SECOND_FIELD_SIZE,
+  SELECTED_IN_FIRST_FIELD,
+  SELECTED_IN_SECOND_FIELD,
+} from "../constants";
 import { CombinationType } from "../types";
 import { postLotteryResult } from "../api";
 import { delay } from "../utils/delay";
+import { TickerHeaderComponent } from "../components/TicketHeaderComponent";
+import { NumbersListComponent } from "../components/NumbersListComponent";
 
 const StyledWrapper = styled.div`
   padding: 14px 11px 24px;
@@ -27,64 +33,8 @@ const StyledMessage = styled.p`
   margin-top: 10px;
 `;
 
-const StyledHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-`;
-
-const StyledTitle = styled.p``;
-
-const StyledSubtitle = styled.p`
-  font-size: 14px;
-  line-height: 20px;
-  margin-bottom: 8px;
-  span {
-    font-weight: 300;
-  }
-`;
-
-const StyledBox = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-`;
-
-const StyledNumber = styled.button<{ selected?: boolean }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 14px;
-  height: 40px;
-  width: 40px;
-  border-radius: 5px;
-  border: 1px solid #dddddd;
-  background-color: transparent;
-  padding: 0;
-  cursor: pointer;
-  transition: 200ms;
-  &:hover {
-    background-color: #dddddd;
-  }
-  ${({ selected }) =>
-    selected &&
-    `
-        background-color: #FFD205;
-        border: none;
-        transform: scale(0.9);
-    `}
-`;
-
 const StyledButton = styled(Button)`
   margin: 23px auto 0;
-`;
-
-const GenerateButton = styled.button`
-  padding: 0;
-  border: 0;
-  background-color: transparent;
-  cursor: pointer;
 `;
 
 export const TicketView = React.memo(() => {
@@ -93,7 +43,9 @@ export const TicketView = React.memo(() => {
   const [message, setMessage] = useState<string | null>(null);
 
   const allSelected = useMemo(() => {
-    return firstField.length === SELECTED_IN_FIRST_FIELD && secondField.length === 1;
+    return (
+      firstField.length === SELECTED_IN_FIRST_FIELD && secondField.length === 1
+    );
   }, [firstField, secondField]);
 
   const generateRandomly = useCallback(() => {
@@ -104,7 +56,10 @@ export const TicketView = React.memo(() => {
 
   const handleSelectFirst = useCallback(
     (number: number) => {
-      if (!firstField.includes(number) && firstField.length < SELECTED_IN_FIRST_FIELD) {
+      if (
+        !firstField.includes(number) &&
+        firstField.length < SELECTED_IN_FIRST_FIELD
+      ) {
         setFirstField((p) => [...p, number]);
         return;
       }
@@ -151,61 +106,30 @@ export const TicketView = React.memo(() => {
   if (message) {
     return (
       <StyledWrapper>
-        <StyledTitle>Билет 1</StyledTitle>
+        <p>Билет 1</p>
         <StyledMessage>{message}</StyledMessage>
       </StyledWrapper>
     );
   }
 
-
   return (
     <StyledWrapper>
-      <StyledHeader>
-        <StyledTitle>Билет 1</StyledTitle>
-        <GenerateButton
-          title="Выгбрать автоматически"
-          onClick={generateRandomly}
-        >
-          <img src={wandIcon} alt="Wand icon" />
-        </GenerateButton>
-      </StyledHeader>
+      <TickerHeaderComponent generateRandomly={generateRandomly} />
+      <NumbersListComponent
+        number={1}
+        size={FIRST_FIELD_SIZE}
+        selectedCount={SELECTED_IN_FIRST_FIELD}
+        field={firstField}
+        onSelect={handleSelectFirst}
+      />
 
-      <StyledSubtitle>
-        Поле 1 <span>Отметьте {SELECTED_IN_FIRST_FIELD} чисел.</span>
-      </StyledSubtitle>
- 
-      <StyledBox>
-        {[...Array(FIRST_FIELD_SIZE).keys()].map((n: number) => {
-          return (
-            <StyledNumber
-              key={n}
-              selected={firstField.includes(n)}
-              onClick={() => handleSelectFirst(n)}
-            >
-              {n}
-            </StyledNumber>
-          );
-        })}
-      </StyledBox>
-
-      <StyledSubtitle>
-        Поле 2 <span>Отметьте 1 число.</span>
-      </StyledSubtitle>
-
-      <StyledBox>
-        <StyledNumber
-          selected={secondField.includes(1)}
-          onClick={() => handleSelectSecond(1)}
-        >
-          1
-        </StyledNumber>
-        <StyledNumber
-          selected={secondField.includes(2)}
-          onClick={() => handleSelectSecond(2)}
-        >
-          2
-        </StyledNumber>
-      </StyledBox>
+      <NumbersListComponent
+        number={2}
+        size={SECOND_FIELD_SIZE}
+        selectedCount={SELECTED_IN_SECOND_FIELD}
+        field={secondField}
+        onSelect={handleSelectSecond}
+      />
 
       <StyledButton onClick={handleSubmit} disabled={!allSelected}>
         Показать результат
