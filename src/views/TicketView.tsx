@@ -4,7 +4,7 @@ import wandIcon from "../images/magic-wand.svg";
 import Button from "../UI/Button";
 import { generateRandomCombination } from "../utils/generateRandomCombination";
 import { checkWinningCombination } from "../utils/checkWinningCombination";
-import { FIRST_FIELD_NUMBERS } from "../constants";
+import { FIRST_FIELD_SIZE, SELECTED_IN_FIRST_FIELD } from "../constants";
 import { CombinationType } from "../types";
 import { postLotteryResult } from "../api";
 import { delay } from "../utils/delay";
@@ -93,7 +93,7 @@ export const TicketView = React.memo(() => {
   const [message, setMessage] = useState<string | null>(null);
 
   const allSelected = useMemo(() => {
-    return firstField.length === 8 && secondField.length === 1;
+    return firstField.length === SELECTED_IN_FIRST_FIELD && secondField.length === 1;
   }, [firstField, secondField]);
 
   const generateRandomly = useCallback(() => {
@@ -104,7 +104,7 @@ export const TicketView = React.memo(() => {
 
   const handleSelectFirst = useCallback(
     (number: number) => {
-      if (!firstField.includes(number) && firstField.length < 8) {
+      if (!firstField.includes(number) && firstField.length < SELECTED_IN_FIRST_FIELD) {
         setFirstField((p) => [...p, number]);
         return;
       }
@@ -157,6 +157,7 @@ export const TicketView = React.memo(() => {
     );
   }
 
+
   return (
     <StyledWrapper>
       <StyledHeader>
@@ -170,11 +171,11 @@ export const TicketView = React.memo(() => {
       </StyledHeader>
 
       <StyledSubtitle>
-        Поле 1 <span>Отметьте 8 чисел.</span>
+        Поле 1 <span>Отметьте {SELECTED_IN_FIRST_FIELD} чисел.</span>
       </StyledSubtitle>
-
+ 
       <StyledBox>
-        {FIRST_FIELD_NUMBERS.map((n: number) => {
+        {[...Array(FIRST_FIELD_SIZE).keys()].map((n: number) => {
           return (
             <StyledNumber
               key={n}
