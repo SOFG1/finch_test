@@ -1,7 +1,6 @@
 
 
 
-//this function generates custom number
 export const generateRandomNumber = (min: number, max: number): number => {
     min = Math.ceil(min);
     max = Math.floor(max);
