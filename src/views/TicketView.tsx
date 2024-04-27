@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "../UI/Button";
 import { generateRandomCombination } from "../utils/generateRandomCombination";
@@ -37,71 +37,59 @@ const StyledButton = styled(Button)`
   margin: 23px auto 0;
 `;
 
-export const TicketView = React.memo(() => {
+export const TicketView = () => {
   const [firstField, setFirstField] = useState<number[]>([]);
   const [secondField, setSecondField] = useState<number[]>([]);
   const [message, setMessage] = useState<string | null>(null);
 
-  const allSelected = useMemo(() => {
-    return (
-      firstField.length === SELECTED_IN_FIRST_FIELD && secondField.length === 1
-    );
-  }, [firstField, secondField]);
+  const allSelected =
+    firstField.length === SELECTED_IN_FIRST_FIELD && secondField.length === 1;
 
-  const generateRandomly = useCallback(() => {
+  const generateRandomly = () => {
     const combination = generateRandomCombination();
     setFirstField(combination.firstField);
     setSecondField(combination.secondField);
-  }, []);
+  };
 
-  const handleSelectFirst = useCallback(
-    (number: number) => {
-      if (
-        !firstField.includes(number) &&
-        firstField.length < SELECTED_IN_FIRST_FIELD
-      ) {
-        setFirstField((p) => [...p, number]);
-        return;
-      }
-      setFirstField((p) => p.filter((n) => n !== number));
-    },
-    [firstField]
-  );
+  const handleSelectFirst = (number: number) => {
+    if (
+      !firstField.includes(number) &&
+      firstField.length < SELECTED_IN_FIRST_FIELD
+    ) {
+      setFirstField((p) => [...p, number]);
+      return;
+    }
+    setFirstField((p) => p.filter((n) => n !== number));
+  };
 
-  const handleSelectSecond = useCallback(
-    (number: number) => {
-      if (secondField.includes(number)) {
-        setSecondField((p) => p.filter((n) => n !== number));
-        return;
-      }
-      setSecondField([number]);
-    },
-    [secondField]
-  );
+  const handleSelectSecond = (number: number) => {
+    if (secondField.includes(number)) {
+      setSecondField((p) => p.filter((n) => n !== number));
+      return;
+    }
+    setSecondField([number]);
+  };
 
-  const sendDataToAPI = useCallback(
-    async (comb: CombinationType, isTicketWon: boolean) => {
-      const isSuccess = await postLotteryResult(comb, isTicketWon);
-      if (isSuccess) return;
-      await delay(2000);
-      const secondAttemptSuccess = await postLotteryResult(comb, isTicketWon);
-      if (secondAttemptSuccess) return;
-      await delay(2000);
-      const thirdAttemptSuccess = await postLotteryResult(comb, isTicketWon);
-      if (thirdAttemptSuccess) return;
-      alert("Ошибка при отправке данных на сервер");
-    },
-    []
-  );
+  const sendDataToAPI = async (comb: CombinationType, isTicketWon: boolean) => {
+    const isSuccess = await postLotteryResult(comb, isTicketWon);
+    if (isSuccess) return;
+    await delay(2000);
+    const secondAttemptSuccess = await postLotteryResult(comb, isTicketWon);
+    if (secondAttemptSuccess) return;
+    await delay(2000);
+    const thirdAttemptSuccess = await postLotteryResult(comb, isTicketWon);
+    if (thirdAttemptSuccess) return;
+    alert("Ошибка при отправке данных на сервер");
+  };
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = () => {
     const userCombination = { firstField, secondField };
     const winningCombination = generateRandomCombination();
     const won = checkWinningCombination(userCombination, winningCombination);
     if (won) setMessage("Ого, вы выиграли! Поздравляем!");
     if (!won) setMessage("К сожалению, вы не выиграли.");
     sendDataToAPI(userCombination, won);
-  }, [firstField, secondField, sendDataToAPI]);
+  };
 
   if (message) {
     return (
@@ -136,4 +124,4 @@ export const TicketView = React.memo(() => {
       </StyledButton>
     </StyledWrapper>
   );
-});
+}
