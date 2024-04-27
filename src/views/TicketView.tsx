@@ -9,9 +9,7 @@ import {
   SELECTED_IN_FIRST_FIELD,
   SELECTED_IN_SECOND_FIELD,
 } from "../constants";
-import { CombinationType } from "../types";
-import { postLotteryResult } from "../api";
-import { delay } from "../utils/delay";
+import { sendDataToAPIRepeatedly } from "../api";
 import { TickerHeaderComponent } from "../components/TicketHeaderComponent";
 import { NumbersListComponent } from "../components/NumbersListComponent";
 
@@ -70,17 +68,6 @@ export const TicketView = () => {
     setSecondField([number]);
   };
 
-  const sendDataToAPI = async (comb: CombinationType, isTicketWon: boolean) => {
-    const isSuccess = await postLotteryResult(comb, isTicketWon);
-    if (isSuccess) return;
-    await delay(2000);
-    const secondAttemptSuccess = await postLotteryResult(comb, isTicketWon);
-    if (secondAttemptSuccess) return;
-    await delay(2000);
-    const thirdAttemptSuccess = await postLotteryResult(comb, isTicketWon);
-    if (thirdAttemptSuccess) return;
-    alert("Ошибка при отправке данных на сервер");
-  };
 
   const handleSubmit = () => {
     const userCombination = { firstField, secondField };
@@ -88,7 +75,7 @@ export const TicketView = () => {
     const won = checkWinningCombination(userCombination, winningCombination);
     if (won) setMessage("Ого, вы выиграли! Поздравляем!");
     if (!won) setMessage("К сожалению, вы не выиграли.");
-    sendDataToAPI(userCombination, won);
+    sendDataToAPIRepeatedly(userCombination, won);
   };
 
   if (message) {
