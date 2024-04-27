@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import Button from "../UI/Button";
 import { generateRandomCombination } from "../utils/generateRandomCombination";
@@ -124,4 +124,4 @@ export const TicketView = () => {
       </StyledButton>
     </StyledWrapper>
   );
-}
+};
