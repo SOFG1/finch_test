@@ -3,7 +3,7 @@ import { TicketView } from "./views/TicketView"
 
 function App() {
 
-  return (
+  return ( 
     <TicketView />
   )
 }

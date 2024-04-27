@@ -11,9 +11,9 @@ const axiosInstance = axios.create({
 
 export const postLotteryResult = async (selectedNumber: CombinationType, isTicketWon: boolean) => {
     try {
-        await axiosInstance.post("posts", {selectedNumber, isTicketWon});
+        await axiosInstance.post("posts", { selectedNumber, isTicketWon });
         return true
-    } catch(e) {
+    } catch (e) {
         return false
     }
 }

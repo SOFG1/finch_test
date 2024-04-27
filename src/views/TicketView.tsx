@@ -128,13 +128,13 @@ export const TicketView = React.memo(() => {
 
     const sendDataToAPI = useCallback(async (comb: CombinationType, isTicketWon: boolean) => {
         const isSuccess = await postLotteryResult(comb, isTicketWon)
-        if(isSuccess) return
+        if (isSuccess) return
         await delay(2000)
         const secondAttemptSuccess = await postLotteryResult(comb, isTicketWon)
-        if(secondAttemptSuccess) return
+        if (secondAttemptSuccess) return
         await delay(2000)
         const thirdAttemptSuccess = await postLotteryResult(comb, isTicketWon)
-        if(thirdAttemptSuccess) return
+        if (thirdAttemptSuccess) return
         alert("Ошибка при отправке данных на сервер")
     }, [])
 
