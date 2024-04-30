@@ -16,24 +16,24 @@ const GenerateButton = styled.button`
   cursor: pointer;
 `;
 
-
 interface IProps {
   generateRandomly: () => void;
 }
 
-export const TickerHeaderComponent = React.memo(({ generateRandomly }: IProps) => {
-  return (
-    <>
-      <StyledHeader>
-        <p>Билет 1</p>
-        <GenerateButton
-          title="Выгбрать автоматически"
-          onClick={generateRandomly}
-        >
-          <img src={wandIcon} alt="Wand icon" />
-        </GenerateButton>
-      </StyledHeader>
-    </>
-  );
-});
-
+export const TickerHeaderComponent = React.memo(
+  ({ generateRandomly }: IProps) => {
+    return (
+      <>
+        <StyledHeader>
+          <p>Билет 1</p>
+          <GenerateButton
+            title="Выгбрать автоматически"
+            onClick={generateRandomly}
+          >
+            <img src={wandIcon} alt="Wand icon" />
+          </GenerateButton>
+        </StyledHeader>
+      </>
+    );
+  }
+);

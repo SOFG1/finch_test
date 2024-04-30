@@ -34,8 +34,8 @@ export const sendDataToAPIRepeatedly = async (
       alert("Ошибка при отправке данных на сервер");
       return;
     }
-    await delay(2000)
+    await delay(2000);
     sendAttempt();
   };
-  sendAttempt()
+  sendAttempt();
 };

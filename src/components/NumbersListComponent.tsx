@@ -58,7 +58,7 @@ export const NumbersListComponent = React.memo(
         </StyledSubtitle>
         <StyledBox>
           {[...Array(size).keys()].map((n: number) => {
-            const num = n + 1
+            const num = n + 1;
             return (
               <StyledNumber
                 key={num}
