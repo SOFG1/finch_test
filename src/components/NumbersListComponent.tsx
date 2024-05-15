@@ -51,7 +51,7 @@ interface IProps {
 
 export const NumbersListComponent = React.memo(
   ({ number, selectedCount, size, field, onSelect }: IProps) => {
-    return (
+    return ( 
       <>
         <StyledSubtitle>
           Поле {number} <span>Отметьте {selectedCount} чисел.</span>
