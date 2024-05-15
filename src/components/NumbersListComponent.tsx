@@ -42,7 +42,7 @@ const StyledSubtitle = styled.p`
 `;
 
 interface IProps {
-  number: number;
+  number: number; 
   selectedCount: number;
   size: number;
   field: number[];
