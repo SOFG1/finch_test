@@ -42,16 +42,16 @@ const StyledSubtitle = styled.p`
 `;
 
 interface IProps {
-  number: number; 
-  selectedCount: number;   
-  size: number;  
-  field: number[]; 
-  onSelect: (n: number) => void; 
-}  
-     
+  number: number;
+  selectedCount: number;
+  size: number;
+  field: number[];
+  onSelect: (n: number) => void;
+}
+
 export const NumbersListComponent = React.memo(
   ({ number, selectedCount, size, field, onSelect }: IProps) => {
-    return ( 
+    return (
       <>
         <StyledSubtitle>
           Поле {number} <span>Отметьте {selectedCount} чисел.</span>
