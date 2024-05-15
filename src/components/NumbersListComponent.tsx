@@ -43,7 +43,7 @@ const StyledSubtitle = styled.p`
 
 interface IProps {
   number: number; 
-  selectedCount: number; 
+  selectedCount: number;  
   size: number;  
   field: number[]; 
   onSelect: (n: number) => void; 
