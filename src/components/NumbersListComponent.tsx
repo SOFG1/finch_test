@@ -48,7 +48,7 @@ interface IProps {
   field: number[];
   onSelect: (n: number) => void;
 }
-  
+   
 export const NumbersListComponent = React.memo(
   ({ number, selectedCount, size, field, onSelect }: IProps) => {
     return ( 
