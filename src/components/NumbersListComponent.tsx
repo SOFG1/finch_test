@@ -57,7 +57,7 @@ export const NumbersListComponent = React.memo(
           Поле {number} <span>Отметьте {selectedCount} чисел.</span>
         </StyledSubtitle>       
         <StyledBox>  
-          {[...Array(size).keys()].map((n: number) => {
+          {[...Array(size).keys()].map((n: number)  => {
             const num = n + 1;
             return (
               <StyledNumber
