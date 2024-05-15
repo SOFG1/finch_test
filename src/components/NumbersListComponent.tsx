@@ -45,7 +45,7 @@ interface IProps {
   number: number; 
   selectedCount: number;
   size: number; 
-  field: number[];
+  field: number[]; 
   onSelect: (n: number) => void;
 }  
      
