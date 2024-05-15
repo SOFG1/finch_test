@@ -43,10 +43,10 @@ const StyledSubtitle = styled.p`
 
 interface IProps {
   number: number;
-  selectedCount: number; 
-  size: number; 
+  selectedCount: number;
+  size: number;
   field: number[];
-  onSelect: (n: number) => void; 
+  onSelect: (n: number) => void;
 }
 
 export const NumbersListComponent = React.memo(
