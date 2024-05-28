@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SetStateAction } from "react";
 import styled from "styled-components";
 
 const StyledBox = styled.div`
@@ -46,11 +46,22 @@ interface IProps {
   selectedCount: number;
   size: number;
   field: number[];
-  onSelect: (n: number) => void;
+  onSelect: (c: SetStateAction<number[]>) => void;
 }
 
 export const NumbersListComponent = React.memo(
   ({ number, selectedCount, size, field, onSelect }: IProps) => {
+    console.log(selectedCount);
+
+    const handleSelect = (n: number) => {
+      onSelect((value: number[]) => {
+        if (!value.includes(n)) {
+          return [n, ...value].slice(0, selectedCount);
+        }
+        return value.filter((v) => v !== n);
+      });
+    };
+
     return (
       <>
         <StyledSubtitle>
@@ -63,7 +74,7 @@ export const NumbersListComponent = React.memo(
               <StyledNumber
                 key={num}
                 selected={field.includes(num)}
-                onClick={() => onSelect(num)}
+                onClick={() => handleSelect(num)}
               >
                 {num}
               </StyledNumber>

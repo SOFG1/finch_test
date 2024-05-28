@@ -49,31 +49,6 @@ export const TicketView = () => {
     setSecondField(combination.secondField);
   }, []);
 
-  const handleSelectFirst = useCallback(
-    (number: number) => {
-      if (
-        !firstField.includes(number) &&
-        firstField.length < SELECTED_IN_FIRST_FIELD
-      ) {
-        setFirstField((p) => [...p, number]);
-        return;
-      }
-      setFirstField((p) => p.filter((n) => n !== number));
-    },
-    [firstField]
-  );
-
-  const handleSelectSecond = useCallback(
-    (number: number) => {
-      if (secondField.includes(number)) {
-        setSecondField((p) => p.filter((n) => n !== number));
-        return;
-      }
-      setSecondField([number]);
-    },
-    [secondField]
-  );
-
   const handleSubmit = () => {
     const userCombination = { firstField, secondField };
     const winningCombination = generateRandomCombination();
@@ -104,7 +79,7 @@ export const TicketView = () => {
         size={FIRST_FIELD_SIZE}
         selectedCount={SELECTED_IN_FIRST_FIELD}
         field={firstField}
-        onSelect={handleSelectFirst}
+        onSelect={setFirstField}
       />
 
       <NumbersListComponent
@@ -112,7 +87,7 @@ export const TicketView = () => {
         size={SECOND_FIELD_SIZE}
         selectedCount={SELECTED_IN_SECOND_FIELD}
         field={secondField}
-        onSelect={handleSelectSecond}
+        onSelect={setSecondField}
       />
 
       <StyledButton onClick={handleSubmit} disabled={!allSelected}>

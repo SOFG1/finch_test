@@ -1,11 +1,7 @@
-import { TicketView } from "./views/TicketView"
-
+import { TicketView } from "./views/TicketView";
 
 function App() {
-
-  return ( 
-    <TicketView />
-  )
+  return <TicketView />;
 }
 
-export default App
+export default App;
