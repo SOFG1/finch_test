@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import styled from "styled-components";
 import Button from "../UI/Button";
 import { generateRandomCombination } from "../utils/generateRandomCombination";
@@ -43,30 +43,36 @@ export const TicketView = () => {
   const allSelected =
     firstField.length === SELECTED_IN_FIRST_FIELD && secondField.length === 1;
 
-  const generateRandomly = () => {
+  const generateRandomly = useCallback(() => {
     const combination = generateRandomCombination();
     setFirstField(combination.firstField);
     setSecondField(combination.secondField);
-  };
+  }, []);
 
-  const handleSelectFirst = (number: number) => {
-    if (
-      !firstField.includes(number) &&
-      firstField.length < SELECTED_IN_FIRST_FIELD
-    ) {
-      setFirstField((p) => [...p, number]);
-      return;
-    }
-    setFirstField((p) => p.filter((n) => n !== number));
-  };
+  const handleSelectFirst = useCallback(
+    (number: number) => {
+      if (
+        !firstField.includes(number) &&
+        firstField.length < SELECTED_IN_FIRST_FIELD
+      ) {
+        setFirstField((p) => [...p, number]);
+        return;
+      }
+      setFirstField((p) => p.filter((n) => n !== number));
+    },
+    [firstField]
+  );
 
-  const handleSelectSecond = (number: number) => {
-    if (secondField.includes(number)) {
-      setSecondField((p) => p.filter((n) => n !== number));
-      return;
-    }
-    setSecondField([number]);
-  };
+  const handleSelectSecond = useCallback(
+    (number: number) => {
+      if (secondField.includes(number)) {
+        setSecondField((p) => p.filter((n) => n !== number));
+        return;
+      }
+      setSecondField([number]);
+    },
+    [secondField]
+  );
 
   const handleSubmit = () => {
     const userCombination = { firstField, secondField };
