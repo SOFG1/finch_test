@@ -55,7 +55,7 @@ export const NumbersListComponent = React.memo(
   
     const handleSelect = (n: number) => { 
       onSelect((value: number[]) => {
-        if (!value.includes(n)) {
+        if (!value.includes(n)) { 
           return [n, ...value].slice(0, selectedCount);
         }
         return value.filter((v) => v !== n);
