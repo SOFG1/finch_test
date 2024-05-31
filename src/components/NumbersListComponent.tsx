@@ -58,7 +58,7 @@ export const NumbersListComponent = React.memo(
         if (!value.includes(n)) { 
           return [n, ...value].slice(0, selectedCount);
         }
-        return value.filter((v) => v !== n);
+        return value.filter((v) => v !== n); 
       });
     };
 
