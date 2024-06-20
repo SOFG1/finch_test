@@ -4,4 +4,4 @@ function App() {
   return <TicketView />;
 }
  
-export default App; 
+export default App;  
